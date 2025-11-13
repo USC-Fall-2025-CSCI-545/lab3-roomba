@@ -123,6 +123,9 @@ class AdaRRT():
             space.
         """
         # FILL in your code here
+        return np.random.uniform(
+            self.joint_lower_limits,
+            self.joint_upper_limits)
 
     def _get_nearest_neighbor(self, sample):
         """
@@ -155,6 +158,8 @@ class AdaRRT():
         :returns: Boolean indicating node is close enough for completion.
         """
         # FILL in your code here
+        distance = np.linalg.norm(node.state - self.goal.state)
+        return distance <= self.goal_precision
 
     def _trace_path_from_start(self, node=None):
         """
@@ -166,6 +171,13 @@ class AdaRRT():
             ending at the goal state.
         """
         # FILL in your code here
+        if node is None:
+            node = self.goal
+        path = []
+        while node is not None:
+            path.append(node.state)
+            node = node.parent
+        return path.reverse()
 
     def _check_for_collision(self, sample):
         """
