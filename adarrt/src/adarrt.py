@@ -136,6 +136,15 @@ class AdaRRT():
         :returns: A Node object for the closest neighbor.
         """
         # FILL in your code here
+        sample = np.asarray(sample)
+        nearest_node = None
+        nearest_dist = float('inf')
+        for node in self.start:
+            dist = np.linalg.norm(sample - node.state)
+            if dist < nearest_dist:
+                nearest_dist = dist
+                nearest_node = node
+        return nearest_node
 
     def _extend_sample(self, sample, neighbor):
         """
@@ -149,6 +158,19 @@ class AdaRRT():
         :returns: The new Node object. On failure (collision), returns None.
         """
         # FILL in your code here
+        sample = np.asarray(sample)
+        q_near = neighbor.state
+        direction = sample - q_near
+        dist = np.linalg.norm(direction)
+        if dist == 0.0:
+            return None
+        step = min(self.step_size, dist)
+        direction_unit = direction / dist
+        q_new = q_near + step * direction_unit
+        q_new = np.clip(q_new, self.joint_lower_limits, self.joint_upper_limits)
+        if self._check_for_collision(q_new):
+            return None
+        return neighbor.add_child(q_new)
 
     def _check_for_completion(self, node):
         """
@@ -273,3 +295,4 @@ if __name__ == '__main__':
     parser.set_defaults(is_sim=True)
     args = parser.parse_args()
     main(args.is_sim)
+
