@@ -218,9 +218,17 @@ class AdaRRT():
             self.ada.get_arm_state_space(),
             self.ada.get_arm_skeleton(), sample)
 
+    def _get_random_sample_near_goal(self):
+      u = np.random.randn(6)
+      u_hat = u / np.linalg.norm(u)
+      dist = 0.05
+
+      r = dist * np.random.rand()**(1/6)
+
+      return self.goal + r * u_hat
 
 def main(is_sim):
-    
+
     if not is_sim:
         from moveit_ros_planning_interface._moveit_roscpp_initializer import roscpp_init
         roscpp_init('adarrt', [])
@@ -300,5 +308,3 @@ if __name__ == '__main__':
     parser.set_defaults(is_sim=True)
     args = parser.parse_args()
     main(args.is_sim)
-
-
