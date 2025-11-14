@@ -199,7 +199,8 @@ class AdaRRT():
         while node is not None:
             path.append(node.state)
             node = node.parent
-        return path.reverse()
+        path.reverse()
+        return path
 
     def _check_for_collision(self, sample):
         """
@@ -295,4 +296,5 @@ if __name__ == '__main__':
     parser.set_defaults(is_sim=True)
     args = parser.parse_args()
     main(args.is_sim)
+
 
