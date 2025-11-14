@@ -105,11 +105,15 @@ class AdaRRT():
             goal on success. On failure, returns None.
         """
         for k in range(self.max_iter):
-            # FILL in your code here
+            rand_point = self._get_random_sample()
+            near_node = self._get_nearest_neighbor(rand_point)
+            new_node = self._extend_sample(rand_point, near_node)
+            if new_node is None:
+                continue
 
             if new_node and self._check_for_completion(new_node):
-                # FILL in your code here
-
+                self.goal.parent = new_node
+                path = self._trace_path_from_start()
                 return path
 
         print("Failed to find path from {0} to {1} after {2} iterations!".format(
